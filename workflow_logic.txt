@@ -1,0 +1,24 @@
+PROCESO: Automatización de Consulta de Expedientes Públicos
+MODO: Desatendido (Unattended)
+------------------------------------------------------------
+
+[INICIO]
+1. DEFINIR: Ruta de descarga = "C:\RPA_Outputs\Expedientes\"
+2. DEFINIR: URL_Portal = "https://comprar.gob.ar/Consultas/Licitaciones"
+
+[FLUJO WEB]
+3. ABRIR: Navegador Edge en URL_Portal
+4. ESPERAR: Carga de elemento "TablaResultados" (Timeout 30s)
+5. EXTRAER: Datos de tabla (Columnas: ID, Fecha, Descripción, Estado, Monto)
+6. ALMACENAR: En variable interna %DatosExtraidos%
+
+[LOGICA DE DATOS]
+7. FILTRAR: %DatosExtraidos% donde Estado = "Vigente"
+8. FORMATEAR: Columna "Monto" a tipo Moneda (Decimal)
+
+[SALIDA]
+9. GENERAR: NombreArchivo = "Reporte_" + FechaActual + ".xlsx"
+10. GUARDAR: %DatosExtraidos% en Ruta de descarga + NombreArchivo
+11. CERRAR: Navegador
+
+[FIN]
