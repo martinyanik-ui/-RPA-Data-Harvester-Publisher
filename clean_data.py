@@ -1,21 +1,20 @@
 import pandas as pd
-import datetime
 
-def clean_public_data(file_path):
-    # Cargamos el reporte generado por el bot
-    df = pd.read_excel(file_path)
+def process_portal_data(input_file):
+    # Cargamos los datos del portal de datos abiertos
+    df = pd.read_csv(input_file)
+    
+    # Supongamos que extraemos una tabla de 'Datasets Actualizados'
+    # Limpiamos nombres de columnas y quitamos nulos
+    df.columns = [c.lower().replace(' ', '_') for c in df.columns]
+    df = df.dropna(subset=['titulo', 'ultima_actualizacion'])
+    
+    # Convertimos la fecha a formato ISO
+    df['fecha_limpia'] = pd.to_datetime(df['ultima_actualizacion']).dt.date
+    
+    # Generamos un archivo listo para Power BI
+    df.to_csv('Datasets_Modernizados.csv', index=False)
+    print("ETL completado: Datos listos para el dashboard.")
 
-    # Limpieza de montos: de "$ 1.200.500,00" a 1200500.00
-    if 'Monto' in df.columns:
-        df['Monto'] = df['Monto'].replace({'\$': '', '\.': '', ',': '.'}, regex=True).astype(float)
-
-    # Estandarización de fechas
-    df['Fecha'] = pd.to_datetime(df['Fecha']).dt.strftime('%Y-%m-%d')
-
-    # Guardar versión limpia para el Dashboard
-    output_name = f"Clean_Expedientes_{datetime.date.today()}.csv"
-    df.to_csv(output_name, index=False)
-    print(f"Archivo procesado: {output_name}")
-
-# Ejemplo de ejecución
-# clean_public_data('Reporte_Expedientes.xlsx')
+# Ejemplo de uso:
+# process_portal_data('datos_extraidos.csv')
