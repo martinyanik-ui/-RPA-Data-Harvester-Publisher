@@ -1,0 +1,5 @@
+# Este código representa las acciones lógicas del bot en PAD
+WebAutomation.LaunchEdge URL: $'''https://comprar.gob.ar/Consultas/Licitaciones''' WindowState: WebAutomation.BrowserWindowState.Maximized BrowserInstance=> Browser
+WebAutomation.ExtractData WindowInstance: Browser Control: $'''table''' ExtractionParameters: { ... } DataFormat: WebAutomation.DataFormat.Excel Variable=> DataFromWeb
+File.WriteToExcel Instance: DataFromWeb File: $'''C:\\RPA_Outputs\\Reporte_Expedientes.xlsx'''
+WebAutomation.Close BrowserInstance: Browser
